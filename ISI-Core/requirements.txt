@@ -1,0 +1,17 @@
+# ISI-Core/requirements.txt
+
+# Core dependencies for ISI-Core module
+pydantic>=1.10.0,<2.0.0    # Data validation and settings management
+numpy>=1.21.0              # Numerical computing
+typing-extensions>=4.0.0   # Extended typing support
+
+# Optional dependencies for specific implementations
+# opencv-python>=4.5.0     # Computer vision (optional)
+# plotly>=5.0.0            # Plotting and visualization (optional)
+# matplotlib>=3.5.0        # Additional plotting (optional)
+
+# Development dependencies (optional)
+# pytest>=7.0.0            # Testing framework
+# black>=22.0.0            # Code formatting
+# mypy>=0.950              # Type checking
+# flake8>=4.0.0            # Linting 

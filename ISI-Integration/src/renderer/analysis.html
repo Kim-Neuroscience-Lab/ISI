@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' http://localhost:8000 ws://localhost:*; worker-src 'self' blob:;">
+    <title>ISI - Analysis</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Main App Container -->
+    <div id="app-container">
+        <!-- Header Bar -->
+        <header id="header-bar">
+            <div class="header-left">
+                <h1>ISI - Analysis</h1>
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    <span>Analysis Ready</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <button class="header-btn" id="load-data">Load Data</button>
+                <button class="header-btn" id="run-analysis">Analyze</button>
+                <button class="header-btn" id="export-results">Export</button>
+            </div>
+        </header>
+
+        <!-- Tab Navigation -->
+        <nav id="tab-navigation">
+            <div class="tab-container">
+                <button class="tab-btn" onclick="window.location.href='setup.html'">
+                    <span class="tab-icon">Setup</span>
+                    Setup
+                </button>
+                <button class="tab-btn" onclick="window.location.href='stimulus.html'">
+                    <span class="tab-icon">Stimulus</span>
+                    Stimulus Generation
+                </button>
+                <button class="tab-btn" onclick="window.location.href='acquisition.html'">
+                    <span class="tab-icon">Acquisition</span>
+                    Acquisition
+                </button>
+                <button class="tab-btn js-active" onclick="window.location.href='analysis.html'">
+                    <span class="tab-icon">Analysis</span>
+                    Analysis
+                </button>
+            </div>
+        </nav>
+
+        <!-- Corner Toggle Buttons (appear when panels are closed) -->
+        <button id="corner-toggle-left" class="corner-toggle corner-toggle-left js-hidden" title="Show Analysis Panel">
+            <span class="corner-toggle-icon">🔬</span>
+        </button>
+        <button id="corner-toggle-right" class="corner-toggle corner-toggle-right js-hidden" title="Show Results Panel">
+            <span class="corner-toggle-icon">📊</span>
+        </button>
+
+        <!-- Main Content -->
+        <main id="main-content">
+            <!-- Left Analysis Controls Panel -->
+            <aside id="left-panel" class="panel">
+                <div class="panel-header">
+                    <h3>Analysis Parameters</h3>
+                    <button class="panel-toggle" data-target="left-panel">×</button>
+                </div>
+                
+                <div class="panel-content">
+                    <!-- Data Source -->
+                    <div class="param-section">
+                        <h4>Data Source</h4>
+                        <div class="param-grid">
+                            <div class="param-item">
+                                <label>Source</label>
+                                <select id="data_source">
+                                    <option value="acquisition">Current Acquisition Session</option>
+                                    <option value="file">Upload Data File</option>
+                                </select>
+                            </div>
+                            <div class="param-item" id="file-upload-section" style="display: none;">
+                                <label>Data File</label>
+                                <input type="file" id="data_file" accept=".hdf5,.mat,.tiff,.tif">
+                            </div>
+                            <div class="param-item">
+                                <label>Data Type</label>
+                                <input type="text" id="data_type" value="Intrinsic Signal" readonly>
+                            </div>
+                        </div>
+                        <div class="status-display" id="acquisition-status">
+                            Ready to load data from current acquisition session
+                        </div>
+                    </div>
+
+                    <!-- Preprocessing -->
+                    <div class="param-section">
+                        <h4>Preprocessing</h4>
+                        <div class="param-grid">
+                            <div class="param-item">
+                                <label>Baseline Correction</label>
+                                <select id="baseline_correction">
+                                    <option value="prestimulus">Pre-stimulus Baseline</option>
+                                    <option value="mean">Mean Subtraction</option>
+                                    <option value="polynomial">Polynomial Detrend</option>
+                                    <option value="blank_condition">Blank Condition</option>
+                                </select>
+                            </div>
+                            <div class="param-item">
+                                <label>Spatial Smoothing (px)</label>
+                                <input type="number" id="spatial_smoothing" value="2" step="0.5" min="0">
+                            </div>
+                            <div class="param-item">
+                                <label>Temporal Smoothing (frames)</label>
+                                <input type="number" id="temporal_smoothing" value="3" step="1" min="0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Analysis Methods -->
+                    <div class="param-section">
+                        <h4>Analysis</h4>
+                        <div class="param-grid">
+                            <div class="param-item">
+                                <label>Method</label>
+                                <select id="analysis_method">
+                                    <option value="response_map">Intrinsic Signal Response Map</option>
+                                    <option value="time_course">Hemodynamic Time Course</option>
+                                    <option value="optical_imaging">Optical Imaging Analysis</option>
+                                    <option value="retinotopy">Retinotopic Mapping</option>
+                                </select>
+                            </div>
+                            <div class="param-item">
+                                <label>Response Window (s)</label>
+                                <input type="text" id="response_window" value="0.5,2.0" placeholder="start,end">
+                            </div>
+                            <div class="param-item">
+                                <label>Baseline Window (s)</label>
+                                <input type="text" id="baseline_window" value="-2.0,-0.5" placeholder="start,end">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ROI Selection -->
+                    <div class="param-section">
+                        <h4>ROI Selection</h4>
+                        <div class="param-grid">
+                            <div class="param-item">
+                                <label>ROI Method</label>
+                                <select id="roi_method">
+                                    <option value="manual">Manual Selection</option>
+                                    <option value="threshold">Threshold</option>
+                                    <option value="clustering">Clustering</option>
+                                    <option value="anatomical">Anatomical Atlas</option>
+                                </select>
+                            </div>
+                            <div class="param-item">
+                                <label>Threshold (%)</label>
+                                <input type="number" id="roi_threshold" value="50" step="5" min="0" max="100">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="param-section">
+                        <button id="preprocess-data" class="secondary-btn">Preprocess</button>
+                        <button id="analyze-data" class="primary-btn">Run Analysis</button>
+                        <button id="save-analysis" class="secondary-btn">Save Results</button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Central Visualization Area -->
+            <section id="viewport">
+                <div id="analysis-view">
+                    <div class="analysis-placeholder">
+                        <div class="analysis-icon">Analysis</div>
+                        <div class="analysis-title">Data Visualization</div>
+                        <div class="analysis-description">Load data to begin analysis</div>
+                    </div>
+                </div>
+                
+                <!-- Analysis Controls -->
+                <div id="analysis-controls">
+                    <div class="control-group">
+                        <button class="control-btn" id="prev-frame">Previous</button>
+                        <button class="control-btn" id="play-analysis">Play</button>
+                        <button class="control-btn" id="next-frame">Next</button>
+                    </div>
+                    <div class="control-group">
+                        <span>Frame: <span id="current-analysis-frame">0</span> / <span id="total-analysis-frames">0</span></span>
+                        <input type="range" id="frame-slider" min="0" max="0" value="0">
+                    </div>
+                </div>
+                
+                <!-- Bottom Corner Elements -->
+                <div id="bottom-corner-left" class="bottom-corner bottom-corner-left">
+                    <div class="viewport-info">
+                        <span id="fps-counter">Analysis</span>
+                        <span id="analysis-info">No data</span>
+                    </div>
+                </div>
+                <div id="bottom-corner-right" class="bottom-corner bottom-corner-right">
+                    <div class="viewport-controls">
+                        <button class="viewport-btn" id="roi-mode">ROI</button>
+                        <button class="viewport-btn" id="measure-mode">Measure</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Results Panel -->
+            <aside id="right-panel" class="panel">
+                <div class="panel-header">
+                    <h3>Analysis Results</h3>
+                    <button class="panel-toggle" data-target="right-panel">×</button>
+                </div>
+                
+                <div class="panel-content">
+                    <div id="analysis-results">
+                        <div class="results-section">
+                            <h4>Data Summary</h4>
+                            <div class="results-list">
+                                <div class="results-item">
+                                    <span class="results-label">Dimensions:</span>
+                                    <span class="results-value" id="data-dimensions">--</span>
+                                </div>
+                                <div class="results-item">
+                                    <span class="results-label">Duration:</span>
+                                    <span class="results-value" id="data-duration">--</span>
+                                </div>
+                                <div class="results-item">
+                                    <span class="results-label">Frame Rate:</span>
+                                    <span class="results-value" id="data-framerate">--</span>
+                                </div>
+                                <div class="results-item">
+                                    <span class="results-label">Trials:</span>
+                                    <span class="results-value" id="data-trials">--</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="results-section">
+                            <h4>Response Statistics</h4>
+                            <div class="results-list">
+                                <div class="results-item">
+                                    <span class="results-label">Peak Response:</span>
+                                    <span class="results-value" id="peak-response">--</span>
+                                </div>
+                                <div class="results-item">
+                                    <span class="results-label">Response Latency:</span>
+                                    <span class="results-value" id="response-latency">--</span>
+                                </div>
+                                <div class="results-item">
+                                    <span class="results-label">Response Area:</span>
+                                    <span class="results-value" id="response-area">--</span>
+                                </div>
+                                <div class="results-item">
+                                    <span class="results-label">SNR:</span>
+                                    <span class="results-value" id="analysis-snr">--</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="results-section">
+                            <h4>ROI Analysis</h4>
+                            <div id="roi-list">
+                                <div class="roi-placeholder">
+                                    No ROIs selected
+                                </div>
+                            </div>
+                            <button id="add-roi" class="secondary-btn">Add ROI</button>
+                            <button id="clear-rois" class="secondary-btn">Clear All</button>
+                        </div>
+
+                        <div class="results-section">
+                            <h4>Export Options</h4>
+                            <div class="param-grid">
+                                <div class="param-item">
+                                    <label>Format</label>
+                                    <select id="export_format">
+                                        <option value="pdf">PDF Report</option>
+                                        <option value="png">PNG Images</option>
+                                        <option value="svg">SVG Vector</option>
+                                        <option value="csv">CSV Data</option>
+                                        <option value="mat">MATLAB Data</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button id="export-analysis" class="primary-btn">Export Results</button>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </main>
+
+        <!-- Status Bar -->
+        <footer id="status-bar">
+            <div class="status-left">
+                <span id="status-message">Ready for analysis</span>
+            </div>
+            <div class="status-right">
+                <span id="connection-status">Analysis Engine Ready</span>
+            </div>
+        </footer>
+    </div>
+
+    <script type="module" src="analysis.js"></script>
+</body>
+</html> 

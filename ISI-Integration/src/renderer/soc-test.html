@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoC Architecture Test</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body { padding: 20px; }
+        .test-panel {
+            width: 300px;
+            height: 200px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            margin: 10px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+        .test-buttons {
+            margin: 20px 0;
+            display: flex;
+            gap: 10px;
+        }
+        .test-btn {
+            padding: 10px 20px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Perfect SoC Architecture Test</h1>
+    
+    <div class="test-buttons">
+        <button class="test-btn" onclick="togglePanel('test-panel-1')">Toggle Panel 1</button>
+        <button class="test-btn" onclick="togglePanel('test-panel-2')">Toggle Panel 2</button>
+    </div>
+    
+    <div id="test-panel-1" class="test-panel panel">
+        <h3>Test Panel 1</h3>
+        <p>This panel should toggle via pure CSS classes.</p>
+        <p><strong>State:</strong> <span id="state-1">Visible</span></p>
+    </div>
+    
+    <div id="test-panel-2" class="test-panel panel">
+        <h3>Test Panel 2</h3>
+        <p>This panel should also toggle via pure CSS classes.</p>
+        <p><strong>State:</strong> <span id="state-2">Visible</span></p>
+    </div>
+    
+    <div>
+        <h3>Architecture Report:</h3>
+        <pre id="report"></pre>
+    </div>
+
+    <script>
+        // PERFECT SoC TEST: JavaScript only manages CSS classes
+        function togglePanel(panelId) {
+            const panel = document.getElementById(panelId);
+            const stateSpan = document.getElementById('state-' + panelId.split('-')[2]);
+            
+            if (!panel) return;
+            
+            // SoC ARCHITECTURE: Only CSS class management
+            const isCurrentlyVisible = !panel.classList.contains('js-hidden');
+            
+            if (isCurrentlyVisible) {
+                panel.classList.add('js-hidden');
+                stateSpan.textContent = 'Hidden';
+            } else {
+                panel.classList.remove('js-hidden');
+                stateSpan.textContent = 'Visible';
+            }
+            
+            updateReport();
+        }
+        
+        function updateReport() {
+            const panel1 = document.getElementById('test-panel-1');
+            const panel2 = document.getElementById('test-panel-2');
+            
+            const report = {
+                'Panel 1 Classes': panel1.classList.toString(),
+                'Panel 1 Display': getComputedStyle(panel1).display,
+                'Panel 2 Classes': panel2.classList.toString(),
+                'Panel 2 Display': getComputedStyle(panel2).display,
+                'SoC Compliance': 'JavaScript only manages CSS classes ✅'
+            };
+            
+            document.getElementById('report').textContent = JSON.stringify(report, null, 2);
+        }
+        
+        // Initialize report
+        updateReport();
+    </script>
+</body>
+</html> 

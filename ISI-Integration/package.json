@@ -1,0 +1,52 @@
+{
+  "name": "isi-integration",
+  "version": "1.0.0",
+  "description": "Intrinsic Signal Imaging Integration and Control",
+  "main": "src/main/main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "webpack --config webpack.config.js",
+    "dev": "webpack --config webpack.config.js --watch & electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ISI",
+    "Intrinsic Signal Imaging",
+    "Neuroscience"
+  ],
+  "author": "Kim Neuroscience Lab",
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^5.99.9",
+    "webpack-cli": "^5.1.4"
+  },
+  "dependencies": {
+    "axios": "^1.6.7",
+    "bootstrap": "^5.3.3",
+    "electron": "^36.3.1",
+    "electron-log": "^5.0.0",
+    "plotly.js": "^2.29.1",
+    "react": "^18.2.0",
+    "react-bootstrap": "^2.10.1",
+    "react-dom": "^18.2.0",
+    "react-plotly.js": "^2.6.0",
+    "three": "^0.160.0"
+  },
+  "build": {
+    "appId": "com.kimneurosciencelab.isi",
+    "mac": {
+      "category": "public.app-category.education"
+    },
+    "extraResources": [
+      {
+        "from": "src/python",
+        "to": "python"
+      }
+    ],
+    "files": [
+      "src/**/*",
+      "node_modules/**/*",
+      "package.json"
+    ]
+  }
+}

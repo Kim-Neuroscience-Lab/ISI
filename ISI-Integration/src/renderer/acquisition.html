@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' http://localhost:8000 ws://localhost:*; worker-src 'self' blob:;">
+    <title>ISI - Acquisition</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Main App Container -->
+    <div id="app-container">
+        <!-- Header Bar -->
+        <header id="header-bar">
+            <div class="header-left">
+                <h1>ISI - Acquisition</h1>
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    <span>Camera Ready</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <button class="header-btn" id="start-acquisition">Start</button>
+                <button class="header-btn" id="stop-acquisition">Stop</button>
+                <button class="header-btn" id="save-data">Save</button>
+            </div>
+        </header>
+
+        <!-- Tab Navigation -->
+        <nav id="tab-navigation">
+            <div class="tab-container">
+                <button class="tab-btn" onclick="window.location.href='setup.html'">
+                    <span class="tab-icon">Setup</span>
+                    Setup
+                </button>
+                <button class="tab-btn" onclick="window.location.href='stimulus.html'">
+                    <span class="tab-icon">Stimulus</span>
+                    Stimulus Generation
+                </button>
+                <button class="tab-btn js-active" onclick="window.location.href='acquisition.html'">
+                    <span class="tab-icon">Acquisition</span>
+                    Acquisition
+                </button>
+                <button class="tab-btn" onclick="window.location.href='analysis.html'">
+                    <span class="tab-icon">Analysis</span>
+                    Analysis
+                </button>
+            </div>
+        </nav>
+
+        <!-- Corner Toggle Buttons (appear when panels are closed) -->
+        <button id="corner-toggle-left" class="corner-toggle corner-toggle-left js-hidden" title="Show Controls Panel">
+            <span class="corner-toggle-icon">🎥</span>
+        </button>
+        <button id="corner-toggle-right" class="corner-toggle corner-toggle-right js-hidden" title="Show Data Panel">
+            <span class="corner-toggle-icon">📈</span>
+        </button>
+
+        <!-- Main Content -->
+        <main id="main-content">
+            <!-- Left Camera Controls Panel -->
+            <aside id="left-panel" class="panel">
+                <div class="panel-header">
+                    <h3>Camera Settings</h3>
+                    <button class="panel-toggle" data-target="left-panel">×</button>
+                </div>
+                
+                <div class="panel-content">
+                    <!-- Camera Parameters -->
+                    <div class="param-section">
+                        <h4>Camera</h4>
+                        <div class="param-grid">
+                            <div class="param-item">
+                                <label>Camera</label>
+                                <select id="camera_select">
+                                    <option value="camera1">Camera 1 (Primary)</option>
+                                    <option value="camera2">Camera 2 (Secondary)</option>
+                                </select>
+                            </div>
+                            <div class="param-item">
+                                <label>Resolution</label>
+                                <select id="resolution">
+                                    <option value="1024x1024">1024 x 1024</option>
+                                    <option value="512x512">512 x 512</option>
+                                    <option value="256x256">256 x 256</option>
+                                </select>
+                            </div>
+                            <div class="param-item">
+                                <label>Frame Rate (fps)</label>
+                                <input type="number" id="frame_rate" value="30" step="1" min="1" max="120">
+                            </div>
+                            <div class="param-item">
+                                <label>Exposure (ms)</label>
+                                <input type="number" id="exposure" value="33" step="1" min="1" max="1000">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Acquisition Parameters -->
+                    <div class="param-section">
+                        <h4>Acquisition</h4>
+                        <div class="param-grid">
+                            <div class="param-item">
+                                <label>Duration (s)</label>
+                                <input type="number" id="acquisition_duration" value="60" step="5" min="1">
+                            </div>
+                            <div class="param-item">
+                                <label>Baseline Duration (s)</label>
+                                <input type="number" id="baseline_duration" value="10" step="1" min="0">
+                            </div>
+                            <div class="param-item">
+                                <label>Trials</label>
+                                <input type="number" id="num_trials" value="10" step="1" min="1">
+                            </div>
+                            <div class="param-item">
+                                <label>Inter-trial Interval (s)</label>
+                                <input type="number" id="inter_trial_interval" value="30" step="5" min="5">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Filtering -->
+                    <div class="param-section">
+                        <h4>Filtering</h4>
+                        <div class="param-grid">
+                            <div class="param-item">
+                                <label>Spatial Filter</label>
+                                <select id="spatial_filter">
+                                    <option value="none">None</option>
+                                    <option value="gaussian">Gaussian</option>
+                                    <option value="median">Median</option>
+                                </select>
+                            </div>
+                            <div class="param-item">
+                                <label>Temporal Filter</label>
+                                <select id="temporal_filter">
+                                    <option value="none">None</option>
+                                    <option value="lowpass">Low Pass</option>
+                                    <option value="highpass">High Pass</option>
+                                    <option value="bandpass">Band Pass</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="param-section">
+                        <button id="test-camera" class="secondary-btn">Test Camera</button>
+                        <button id="calibrate" class="secondary-btn">Calibrate</button>
+                        <button id="start-recording" class="primary-btn">Start Recording</button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Central Live View -->
+            <section id="viewport">
+                <div id="live-view">
+                    <div class="live-view-placeholder">
+                        <div class="live-view-icon">Camera</div>
+                        <div class="live-view-title">Live Camera Feed</div>
+                        <div class="live-view-description">Start camera to see live view</div>
+                    </div>
+                </div>
+                
+                <!-- Recording Controls -->
+                <div id="recording-controls">
+                    <div class="control-group">
+                        <button class="control-btn" id="record-btn">Record</button>
+                        <button class="control-btn" id="pause-btn">Pause</button>
+                        <button class="control-btn" id="stop-btn">Stop</button>
+                    </div>
+                    <div class="control-group">
+                        <span>Time: <span id="recording-time">00:00</span></span>
+                        <span>Frames: <span id="frame-count">0</span></span>
+                    </div>
+                </div>
+                
+                <!-- Bottom Corner Elements -->
+                <div id="bottom-corner-left" class="bottom-corner bottom-corner-left">
+                    <div class="viewport-info">
+                        <span id="fps-counter">30 FPS</span>
+                        <span id="recording-info">Ready</span>
+                    </div>
+                </div>
+                <div id="bottom-corner-right" class="bottom-corner bottom-corner-right">
+                    <div class="viewport-controls">
+                        <button class="viewport-btn" id="live-view-btn">Live</button>
+                        <button class="viewport-btn" id="record-view-btn">Record</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Data Panel -->
+            <aside id="right-panel" class="panel">
+                <div class="panel-header">
+                    <h3>Acquisition Data</h3>
+                    <button class="panel-toggle" data-target="right-panel">×</button>
+                </div>
+                
+                <div class="panel-content">
+                    <div id="acquisition-data">
+                        <div class="data-section">
+                            <h4>Current Session</h4>
+                            <div class="data-list">
+                                <div class="data-item">
+                                    <span class="data-label">Status:</span>
+                                    <span class="data-value" id="session-status">Ready</span>
+                                </div>
+                                <div class="data-item">
+                                    <span class="data-label">Trial:</span>
+                                    <span class="data-value" id="current-trial">0 / 0</span>
+                                </div>
+                                <div class="data-item">
+                                    <span class="data-label">Elapsed:</span>
+                                    <span class="data-value" id="elapsed-time">00:00:00</span>
+                                </div>
+                                <div class="data-item">
+                                    <span class="data-label">Data Size:</span>
+                                    <span class="data-value" id="data-size">0 MB</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="data-section">
+                            <h4>Signal Quality</h4>
+                            <div class="data-list">
+                                <div class="data-item">
+                                    <span class="data-label">SNR:</span>
+                                    <span class="data-value" id="snr-value">--</span>
+                                </div>
+                                <div class="data-item">
+                                    <span class="data-label">Baseline Std:</span>
+                                    <span class="data-value" id="baseline-std">--</span>
+                                </div>
+                                <div class="data-item">
+                                    <span class="data-label">Motion:</span>
+                                    <span class="data-value" id="motion-level">Low</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="data-section">
+                            <h4>Save Options</h4>
+                            <div class="param-grid">
+                                <div class="param-item">
+                                    <label>Format</label>
+                                    <select id="save_format">
+                                        <option value="hdf5">HDF5</option>
+                                        <option value="mat">MATLAB</option>
+                                        <option value="npy">NumPy</option>
+                                        <option value="tiff">TIFF Stack</option>
+                                    </select>
+                                </div>
+                                <div class="param-item">
+                                    <label>Compression</label>
+                                    <select id="compression">
+                                        <option value="lzf">LZF (Fast)</option>
+                                        <option value="gzip">GZIP (Small)</option>
+                                        <option value="none">None</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button id="save-session" class="primary-btn">Save Session</button>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </main>
+
+        <!-- Status Bar -->
+        <footer id="status-bar">
+            <div class="status-left">
+                <span id="status-message">Ready for acquisition</span>
+            </div>
+            <div class="status-right">
+                <span id="connection-status">Camera Connected</span>
+            </div>
+        </footer>
+    </div>
+
+    <script type="module" src="acquisition.js"></script>
+</body>
+</html> 

@@ -1,0 +1,1253 @@
+/* Professional Scientific Dark Mode Interface for ISI */
+
+/* Import Professional Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    /* Professional Scientific Color Palette */
+    --primary-color: #0ea5e9;
+    --primary-hover: #0284c7;
+    --primary-dark: #0369a1;
+    --secondary-color: #64748b;
+    --success-color: #10b981;
+    --danger-color: #ef4444;
+    --warning-color: #f59e0b;
+    --info-color: #3b82f6;
+    
+    /* Background Colors - Deep Scientific Dark */
+    --bg-primary: #0a0e13;
+    --bg-secondary: #111827;
+    --bg-tertiary: #1f2937;
+    --bg-quaternary: #374151;
+    --bg-accent: #0c1420;
+    
+    /* Text Colors - High Contrast for Readability */
+    --text-primary: #f9fafb;
+    --text-secondary: #d1d5db;
+    --text-tertiary: #9ca3af;
+    --text-muted: #6b7280;
+    
+    /* Border and Shadow Colors */
+    --border-color: #374151;
+    --border-light: #4b5563;
+    --shadow-light: rgba(0, 0, 0, 0.1);
+    --shadow-medium: rgba(0, 0, 0, 0.25);
+    --shadow-heavy: rgba(0, 0, 0, 0.5);
+    
+    /* Scientific Accent Colors */
+    --accent-blue: #60a5fa;
+    --accent-cyan: #22d3ee;
+    --accent-emerald: #34d399;
+    --accent-amber: #fbbf24;
+    --accent-rose: #fb7185;
+    --accent-violet: #a78bfa;
+    
+    /* Layout Variables */
+    --panel-width: 25vw;
+    --panel-min-width: 20rem;
+    --panel-max-width: 30rem;
+    --header-height: 4rem;
+    --status-height: 2rem;
+    --border-radius: 0.5rem;
+    --border-radius-sm: 0.25rem;
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+    
+    /* Typography */
+    --font-family-primary: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    --font-family-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+    --font-size-xs: 11px;
+    --font-size-sm: 13px;
+    --font-size-base: 14px;
+    --font-size-lg: 16px;
+    --font-size-xl: 18px;
+    --font-size-2xl: 20px;
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    
+    /* SoC: State Classes */
+    --tab-inactive-bg: #334155;
+    --tab-inactive-color: #cbd5e1;
+    --tab-active-bg: #0f172a;
+    --tab-active-color: #f8fafc;
+    --tab-hover-bg: #0f172a;
+    --tab-hover-color: #f8fafc;
+    --tab-active-border: #2563eb;
+}
+
+body {
+    font-family: var(--font-family-primary);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    overflow: hidden;
+    height: 100vh;
+    font-size: var(--font-size-base);
+    line-height: 1.5;
+    font-weight: var(--font-weight-normal);
+    letter-spacing: -0.01em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Main App Container */
+#app-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-accent) 100%);
+    overflow: hidden;
+}
+
+/* Header Bar - Professional Scientific Header */
+#header-bar {
+    height: var(--header-height);
+    background: var(--bg-secondary);
+    border-bottom: 2px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--spacing-lg);
+    box-shadow: 0 4px 12px var(--shadow-medium);
+    position: relative;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+}
+
+.header-left h1 {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--text-primary);
+    letter-spacing: -0.025em;
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-cyan));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 20px rgba(14, 165, 233, 0.2);
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    font-weight: var(--font-weight-medium);
+    padding: var(--spacing-xs) var(--spacing-md);
+    background: var(--bg-tertiary);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+    box-shadow: inset 0 1px 2px var(--shadow-light);
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--success-color);
+    animation: pulse 2s infinite;
+    box-shadow: 0 0 8px var(--success-color);
+}
+
+@keyframes pulse {
+    0%, 100% { 
+        opacity: 1; 
+        transform: scale(1);
+    }
+    50% { 
+        opacity: 0.7; 
+        transform: scale(0.95);
+    }
+}
+
+.header-right {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.header-btn {
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+/* ARCHITECTURAL PURITY: Header buttons maintain styling even with functional classes */
+.header-btn.panel-toggle {
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    width: auto;
+    height: auto;
+    display: inline-block;
+}
+
+/* ============================================================================
+   SoC ARCHITECTURE: CSS-ONLY STATE MANAGEMENT
+   
+   Perfect separation: JavaScript controls BEHAVIOR, CSS controls PRESENTATION
+   JavaScript only adds/removes classes, never manipulates style properties
+   ============================================================================ */
+
+/* SoC: Scene Tree Content Structure */
+.scene-tree-header {
+    padding: var(--spacing-md);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.scene-tree-stats {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+}
+
+.scene-tree-placeholder {
+    padding: var(--spacing-lg);
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+}
+
+.scene-tree-placeholder-icon {
+    margin-bottom: var(--spacing-sm);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    color: var(--text-secondary);
+}
+
+.scene-tree-placeholder-title {
+    font-weight: var(--font-weight-medium);
+    margin-bottom: var(--spacing-xs);
+}
+
+.scene-tree-placeholder-description {
+    font-size: var(--font-size-xs);
+    opacity: 0.7;
+}
+
+/* SoC: Panel Visibility Control - Pure CSS State Management */
+.panel.js-hidden {
+    display: none !important;
+}
+
+/* Note: .panel base class already has display: flex, 
+   js-visible class only needed for explicit state management */
+.panel.js-visible {
+    display: flex !important;
+}
+
+/* SoC: Tab State Management - Pure CSS State Classes */
+.tab-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md) var(--spacing-lg);
+    background: var(--tab-inactive-bg);
+    color: var(--tab-inactive-color);
+    border: none;
+    border-top: 3px solid transparent;
+    cursor: pointer;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    min-width: 120px;
+    justify-content: center;
+}
+
+.tab-btn.js-hover {
+    background: var(--tab-hover-bg);
+    color: var(--tab-hover-color);
+}
+
+.tab-btn.js-active {
+    background: var(--tab-active-bg);
+    color: var(--tab-active-color);
+    border-top: 3px solid var(--tab-active-border);
+}
+
+/* SoC: Tab Content Visibility */
+.tab-content {
+    display: none;
+    flex: 1;
+    width: 100%;
+}
+
+.tab-content.js-active {
+    display: flex;
+}
+
+/* ============================================================================
+   EXISTING STYLES CONTINUE BELOW
+   ============================================================================ */
+
+/* Tab Navigation - Scientific Tab Design */
+#tab-navigation {
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
+    padding: 0 var(--spacing-lg);
+    box-shadow: inset 0 -1px 0 var(--border-color);
+}
+
+.tab-container {
+    display: flex;
+    gap: 2px;
+}
+
+.tab-icon {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    color: var(--text-secondary);
+}
+
+.tab-btn.js-active .tab-icon {
+    color: var(--primary-color);
+}
+
+.header-btn:hover,
+.header-btn.panel-toggle:hover {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+}
+
+.header-btn:active {
+    transform: translateY(0);
+}
+
+/* SoC: Removed duplicate - tab-icon styles are now properly organized above */
+
+/* Main Content Area */
+#main-content {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+}
+
+/* Panel Styles - Professional Scientific Panels */
+.panel {
+    width: var(--panel-width);
+    min-width: var(--panel-min-width);
+    max-width: var(--panel-max-width);
+    flex-shrink: 0;
+    background: var(--bg-secondary);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: inset -1px 0 0 var(--border-color);
+}
+
+#right-panel {
+    border-right: none;
+    border-left: 1px solid var(--border-color);
+    box-shadow: inset 1px 0 0 var(--border-color);
+}
+
+.panel-header {
+    height: 56px;
+    background: var(--bg-tertiary);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--spacing-lg);
+    backdrop-filter: blur(8px);
+}
+
+.panel-header h3 {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
+}
+
+.panel-toggle {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: var(--font-size-xl);
+    padding: var(--spacing-xs);
+    border-radius: var(--border-radius-sm);
+    transition: all 0.2s;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.panel-toggle:hover {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+.panel-content {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: var(--spacing-lg);
+    height: 0; /* Force flex child to respect parent height */
+    min-height: 0; /* Allow shrinking below content size */
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-color) transparent;
+}
+
+/* Parameter Sections - Scientific Parameter Controls */
+.param-section {
+    margin-bottom: var(--spacing-xl);
+    padding: var(--spacing-lg);
+    background: var(--bg-tertiary);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 2px 4px var(--shadow-light);
+}
+
+.param-section h4 {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-md);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: var(--spacing-sm);
+}
+
+.param-grid {
+    display: grid;
+    gap: var(--spacing-md);
+}
+
+.param-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.param-item label {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: -0.01em;
+}
+
+.param-item input,
+.param-item select {
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    color: var(--text-primary);
+    font-size: var(--font-size-sm);
+    font-family: var(--font-family-primary);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: inset 0 1px 2px var(--shadow-light);
+}
+
+.param-item input:focus,
+.param-item select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
+    background: var(--bg-secondary);
+}
+
+.param-item input[type="number"] {
+    font-family: var(--font-family-mono);
+    text-align: right;
+}
+
+.param-item input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--primary-color);
+    cursor: pointer;
+}
+
+/* Button Styles - Professional Scientific Buttons */
+.primary-btn {
+    width: 100%;
+    padding: var(--spacing-md);
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 4px rgba(14, 165, 233, 0.2);
+    letter-spacing: 0.01em;
+}
+
+.primary-btn:hover {
+    background: linear-gradient(135deg, var(--primary-hover), var(--primary-dark));
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+}
+
+.primary-btn:active {
+    transform: translateY(0);
+}
+
+.primary-btn:disabled {
+    background: var(--bg-quaternary);
+    color: var(--text-muted);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.secondary-btn {
+    width: 100%;
+    padding: var(--spacing-md);
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-top: var(--spacing-sm);
+}
+
+.secondary-btn:hover {
+    background: var(--bg-quaternary);
+    border-color: var(--border-light);
+    transform: translateY(-1px);
+}
+
+/* Status Displays */
+.status-display {
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    font-size: var(--font-size-xs);
+    color: var(--text-secondary);
+    font-family: var(--font-family-mono);
+    box-shadow: inset 0 1px 2px var(--shadow-light);
+}
+
+.status-display.success {
+    background: rgba(16, 185, 129, 0.1);
+    border-color: var(--success-color);
+    color: var(--accent-emerald);
+}
+
+.status-display.error {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: var(--danger-color);
+    color: var(--accent-rose);
+}
+
+.status-display.warning {
+    background: rgba(245, 158, 11, 0.1);
+    border-color: var(--warning-color);
+    color: var(--accent-amber);
+}
+
+/* Viewport - Scientific 3D Visualization Area */
+#viewport {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    position: relative;
+    min-height: 0; /* Allow flex child to shrink */
+}
+
+#visualization-container {
+    flex: 1;
+    position: relative;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    min-height: 0; /* Allow flex child to shrink */
+}
+
+#visualization-container canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: var(--border-radius);
+    background: radial-gradient(circle at center, #0f1419 0%, var(--bg-primary) 100%);
+    object-fit: contain;
+}
+
+/* Viewport Overlay - Scientific UI Overlay */
+#viewport-overlay {
+    display: none;
+}
+
+/* Bottom Status Bar - Scientific Status Information */
+#status-bar {
+    height: var(--status-height);
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--spacing-lg);
+    font-size: var(--font-size-xs);
+    font-family: var(--font-family-mono);
+    color: var(--text-secondary);
+    box-shadow: 0 -2px 8px var(--shadow-light);
+}
+
+.status-left,
+.status-center,
+.status-right {
+    display: flex;
+    gap: var(--spacing-md);
+}
+
+.status-center {
+    flex: 1;
+    justify-content: center;
+}
+
+/* Scene Tree - Scientific Object Hierarchy */
+.scene-tree-container {
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-xs);
+}
+
+.scene-tree-node {
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    margin: 1px 0;
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid transparent;
+}
+
+.scene-tree-node:hover {
+    background: var(--bg-tertiary);
+    border-color: var(--border-color);
+}
+
+.scene-tree-node.selected {
+    background: var(--primary-color);
+    color: white;
+}
+
+.scene-tree-node.hidden .node-name {
+    opacity: 0.5;
+    text-decoration: line-through;
+}
+
+.node-toggle,
+.node-visibility {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 2px;
+    margin-right: var(--spacing-xs);
+    border-radius: var(--border-radius-sm);
+    font-size: var(--font-size-xs);
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.node-toggle:hover,
+.node-visibility:hover {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+.node-name {
+    flex: 1;
+    font-weight: var(--font-weight-medium);
+}
+
+/* Scientific Category Colors */
+.category-Mouse .node-name { color: var(--accent-emerald); }
+.category-Landmarks .node-name { color: var(--accent-amber); }
+.category-Hardware .node-name { color: var(--accent-blue); }
+.category-Reference .node-name { color: var(--accent-violet); }
+.category-General .node-name { color: var(--text-secondary); }
+.category-Monitor .node-name { color: var(--accent-blue); }
+.category-FloorPlan .node-name { color: var(--accent-rose); }
+
+.node-type {
+    font-size: var(--font-size-xs);
+    color: var(--text-tertiary);
+    margin-left: var(--spacing-xs);
+    font-weight: var(--font-weight-normal);
+}
+
+.scene-tree-nodes {
+    max-height: 400px;
+    overflow-y: auto;
+    padding: var(--spacing-xs);
+}
+
+.scene-tree-export {
+    width: 100%;
+    padding: var(--spacing-sm);
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    margin-top: var(--spacing-md);
+    transition: all 0.2s;
+}
+
+.scene-tree-export:hover {
+    background: var(--bg-quaternary);
+    border-color: var(--border-light);
+}
+
+/* Modal Styles - Professional Scientific Modals */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(10, 14, 19, 0.8);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modal.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.modal-content {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    max-width: 500px;
+    width: 90%;
+    max-height: 80vh;
+    overflow: hidden;
+    box-shadow: 0 20px 40px var(--shadow-heavy);
+}
+
+.modal-header {
+    padding: var(--spacing-lg);
+    background: var(--bg-tertiary);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.modal-header h3 {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-primary);
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: var(--font-size-xl);
+    padding: var(--spacing-xs);
+    border-radius: var(--border-radius-sm);
+    transition: all 0.2s;
+}
+
+.modal-close:hover {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+.modal-body {
+    padding: var(--spacing-lg);
+    overflow-y: auto;
+}
+
+/* Keyboard Shortcuts Grid */
+.shortcut-grid {
+    display: grid;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-lg);
+}
+
+.shortcut-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+kbd {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius-sm);
+    border: 1px solid var(--border-color);
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    min-width: 24px;
+    text-align: center;
+    box-shadow: 0 1px 2px var(--shadow-light);
+}
+
+/* Tab Placeholder Styles */
+.tab-placeholder {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-primary);
+}
+
+.placeholder-content {
+    text-align: center;
+    max-width: 600px;
+    padding: var(--spacing-xl);
+}
+
+.placeholder-content h2 {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-md);
+}
+
+.placeholder-content p {
+    font-size: var(--font-size-lg);
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-xl);
+    line-height: 1.6;
+}
+
+.feature-list {
+    display: grid;
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+    text-align: left;
+}
+
+.feature-item {
+    padding: var(--spacing-lg);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 4px var(--shadow-light);
+}
+
+.feature-item h4 {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-sm);
+}
+
+.feature-item p {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* ============================================================================
+   PERFECT SoC RESPONSIVE DESIGN
+   
+   ARCHITECTURAL PURITY: All behavioral logic removed from CSS
+   CSS only handles visual presentation, JavaScript handles behavioral state
+   ============================================================================ */
+
+/* Viewport Layout - Pure CSS Layout */
+#setup-tab {
+    display: flex;
+    flex: 1;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ARCHITECTURAL PURITY: Single Source of Truth maintained at all screen sizes */
+
+/* ARCHITECTURAL PURITY: No responsive positioning overrides - maintain natural flow */
+
+/* Custom Scrollbars - Scientific Style */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--border-light);
+}
+
+/* ============================================================================
+   TAB-SPECIFIC CONTENT AREAS - SCROLLABLE CONTENT
+   ============================================================================ */
+
+/* Stimulus Tab Content */
+#stimulus-preview,
+#live-view,
+#analysis-view {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-primary);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+}
+
+.preview-placeholder,
+.live-view-placeholder,
+.analysis-placeholder {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    text-align: center;
+    padding: var(--spacing-xl);
+}
+
+.preview-icon,
+.live-view-icon,
+.analysis-icon {
+    font-size: 3rem;
+    margin-bottom: var(--spacing-md);
+    opacity: 0.5;
+}
+
+.preview-title,
+.live-view-title,
+.analysis-title {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    margin-bottom: var(--spacing-sm);
+}
+
+.preview-description,
+.live-view-description,
+.analysis-description {
+    font-size: var(--font-size-sm);
+    opacity: 0.7;
+}
+
+/* Control areas */
+#preview-controls,
+#recording-controls,
+#analysis-controls {
+    padding: var(--spacing-md);
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-md);
+}
+
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.control-btn {
+    padding: var(--spacing-xs) var(--spacing-md);
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    font-size: var(--font-size-sm);
+    transition: all 0.2s;
+}
+
+.control-btn:hover {
+    background: var(--bg-quaternary);
+    border-color: var(--primary-color);
+}
+
+/* Data sections for right panels */
+.data-section,
+.results-section,
+.property-section {
+    margin-bottom: var(--spacing-lg);
+    padding: var(--spacing-md);
+    background: var(--bg-tertiary);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+}
+
+.data-section h4,
+.results-section h4,
+.property-section h4 {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-md);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: var(--spacing-sm);
+}
+
+.data-list,
+.results-list,
+.property-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.data-item,
+.results-item,
+.property-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: var(--font-size-sm);
+}
+
+.data-label,
+.results-label,
+.property-label {
+    color: var(--text-secondary);
+    font-weight: var(--font-weight-medium);
+}
+
+.data-value,
+.results-value,
+.property-value {
+    color: var(--text-primary);
+    font-family: var(--font-family-mono);
+    font-weight: var(--font-weight-medium);
+}
+
+/* ============================================================================
+   CORNER TOGGLE BUTTONS - Elegant panel reopening interface
+   ============================================================================ */
+
+.corner-toggle {
+    position: fixed;
+    top: 120px; /* Below header and tabs */
+    width: 48px;
+    height: 48px;
+    background: var(--bg-secondary);
+    border: 2px solid var(--border-color);
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: var(--text-primary);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1000;
+    opacity: 0.8;
+}
+
+.corner-toggle-left {
+    left: 16px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.corner-toggle-right {
+    right: 16px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.corner-toggle:hover {
+    opacity: 1;
+    transform: scale(1.1);
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+    box-shadow: 0 6px 20px rgba(14, 165, 233, 0.4);
+}
+
+.corner-toggle.js-hidden {
+    display: none;
+}
+
+.corner-toggle.js-visible {
+    display: flex;
+}
+
+.corner-toggle-icon {
+    font-size: 20px;
+    line-height: 1;
+}
+
+/* ============================================================================
+   SoC ARCHITECTURE: CSS-ONLY STATE MANAGEMENT
+   
+   Perfect separation: JavaScript controls BEHAVIOR, CSS controls PRESENTATION
+   JavaScript only adds/removes classes, never manipulates style properties
+   ============================================================================ */
+
+/* ============================================================================
+   BOTTOM CORNER ELEMENTS - Elegant viewport info and controls
+   ============================================================================ */
+
+.bottom-corner {
+    position: absolute;
+    bottom: 16px; /* Within viewport */
+    z-index: 1000;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 8px 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    opacity: 0.85;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(10px);
+}
+
+.bottom-corner-left {
+    left: 16px;
+    border-bottom-left-radius: 0;
+}
+
+.bottom-corner-right {
+    right: 16px;
+    border-bottom-right-radius: 0;
+}
+
+.bottom-corner:hover {
+    opacity: 1;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+    background: var(--bg-primary);
+    border-color: var(--primary-color);
+}
+
+/* Viewport Info Styles */
+.viewport-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-family: var(--font-family-mono);
+    min-width: 80px;
+}
+
+.viewport-info span {
+    white-space: nowrap;
+    padding: 2px 6px;
+    background: var(--bg-tertiary);
+    border-radius: 3px;
+    font-weight: var(--font-weight-medium);
+    transition: all 0.2s ease;
+}
+
+.bottom-corner:hover .viewport-info span {
+    background: var(--primary-color);
+    color: white;
+}
+
+/* Viewport Controls Styles */
+.viewport-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.viewport-btn {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 6px 12px;
+    font-size: 12px;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: var(--font-weight-medium);
+    min-width: 80px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.viewport-btn:hover {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(14, 165, 233, 0.3);
+}
+
+.viewport-btn:active {
+    transform: translateY(0);
+}
+
+.viewport-btn.active {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+    box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.2);
+}
+
+/* Remove old viewport overlay styles */
+#viewport-overlay {
+    display: none;
+} 

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' http://localhost:8000 ws://localhost:*; worker-src 'self' blob:;">
+    <title>ISI - Setup</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Three.js ES6 Module -->
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+            "three/examples/jsm/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+        }
+    }
+    </script>
+</head>
+<body>
+    <!-- Main App Container -->
+    <div id="app-container">
+        <!-- Header Bar -->
+        <header id="header-bar">
+            <div class="header-left">
+                <h1>ISI - Setup</h1>
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    <span>System Ready</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <button class="header-btn" id="reset-camera">Reset View</button>
+            </div>
+        </header>
+
+        <!-- Tab Navigation -->
+        <nav id="tab-navigation">
+            <div class="tab-container">
+                <button class="tab-btn js-active" onclick="window.location.href='setup.html'">
+                    <span class="tab-icon">Setup</span>
+                    Setup
+                </button>
+                <button class="tab-btn" onclick="window.location.href='stimulus.html'">
+                    <span class="tab-icon">Stimulus</span>
+                    Stimulus Generation
+                </button>
+                <button class="tab-btn" onclick="window.location.href='acquisition.html'">
+                    <span class="tab-icon">Acquisition</span>
+                    Acquisition
+                </button>
+                <button class="tab-btn" onclick="window.location.href='analysis.html'">
+                    <span class="tab-icon">Analysis</span>
+                    Analysis
+                </button>
+            </div>
+        </nav>
+
+        <!-- Corner Toggle Buttons (appear when panels are closed) -->
+        <button id="corner-toggle-left" class="corner-toggle corner-toggle-left js-hidden" title="Show Controls Panel">
+            <span class="corner-toggle-icon">⚙</span>
+        </button>
+        <button id="corner-toggle-right" class="corner-toggle corner-toggle-right js-hidden" title="Show Scene Tree">
+            <span class="corner-toggle-icon">🌳</span>
+        </button>
+
+        <!-- Main Content -->
+        <main id="main-content">
+            <!-- Left Controls Panel -->
+            <aside id="left-panel" class="panel">
+                <div class="panel-header">
+                    <h3>Setup Parameters</h3>
+                    <button class="panel-toggle" data-target="left-panel">×</button>
+                </div>
+                
+                <div class="panel-content">
+                    <!-- Monitor Parameters -->
+                    <div class="param-section">
+                        <h4>Monitor</h4>
+                        <div class="param-grid">
+                            <div class="param-item">
+                                <label>Orientation</label>
+                                <select id="monitor_orientation">
+                                    <option value="landscape">Landscape</option>
+                                    <option value="portrait">Portrait</option>
+                                </select>
+                            </div>
+                            <div class="param-item">
+                                <label>Width (cm)</label>
+                                <input type="number" id="monitor_width" value="33.53" step="0.1">
+                            </div>
+                            <div class="param-item">
+                                <label>Height (cm)</label>
+                                <input type="number" id="monitor_height" value="59.69" step="0.1">
+                            </div>
+                            <div class="param-item">
+                                <label>Distance (cm)</label>
+                                <input type="number" id="monitor_distance" value="10" step="0.1">
+                            </div>
+                            <div class="param-item">
+                                <label>Elevation (°)</label>
+                                <input type="number" id="monitor_elevation" value="20" step="1">
+                            </div>
+                            <div class="param-item">
+                                <label>Rotation (°)</label>
+                                <input type="number" id="monitor_rotation" value="0" step="1">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mouse Parameters -->
+                    <div class="param-section">
+                        <h4>Mouse</h4>
+                        <div class="param-grid">
+                            <div class="param-item">
+                                <label>Length (cm)</label>
+                                <input type="number" id="mouse_length" value="7.5" step="0.1" min="3" max="15">
+                            </div>
+                            <div class="param-item">
+                                <label>Eye Height (cm)</label>
+                                <input type="number" id="mouse_eye_height" value="5" step="0.1">
+                            </div>
+                            <div class="param-item">
+                                <label>Visual Field V (°)</label>
+                                <input type="number" id="mouse_visual_field_vertical" value="110" step="1">
+                            </div>
+                            <div class="param-item">
+                                <label>Visual Field H (°)</label>
+                                <input type="number" id="mouse_visual_field_horizontal" value="140" step="1">
+                            </div>
+                            <div class="param-item">
+                                <label>Bisector Height (cm)</label>
+                                <input type="number" id="perpendicular_bisector_height" value="30" step="0.1">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Transform -->
+                    <div class="param-section">
+                        <h4>Transform</h4>
+                        <div class="param-grid">
+                            <div class="param-item">
+                                <label>Type</label>
+                                <select id="transform_type">
+                                    <option value="angular-grid">Angular Grid</option>
+                                    <option value="spherical">Spherical</option>
+                                    <option value="cylindrical-y">Cylindrical-Y</option>
+                                    <option value="cylindrical-x">Cylindrical-X</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Landmarks Display -->
+                    <div class="param-section">
+                        <h4>Anatomical Landmarks</h4>
+                        <div class="param-grid">
+                            <div class="param-item">
+                                <label>Show Landmarks</label>
+                                <input type="checkbox" id="landmarks-checkbox" checked>
+                            </div>
+                        </div>
+                        <div id="landmark-status" class="status-display">
+                            Landmarks automatically detected. Press 'H' to toggle visibility.
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="param-section">
+                        <button id="visualize-button" class="primary-btn">Update Visualization</button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Central 3D Viewport -->
+            <section id="viewport">
+                <div id="visualization-container">
+                    <!-- Three.js canvas will be inserted here -->
+                </div>
+                
+                <!-- Bottom Corner Elements -->
+                <div id="bottom-corner-left" class="bottom-corner bottom-corner-left">
+                    <div class="viewport-info">
+                        <span id="fps-counter">60 FPS</span>
+                        <span id="node-count">0 Objects</span>
+                    </div>
+                </div>
+                <div id="bottom-corner-right" class="bottom-corner bottom-corner-right">
+                    <div class="viewport-controls">
+                        <button class="viewport-btn" id="wireframe-toggle">Wireframe</button>
+                        <button class="viewport-btn" id="fullscreen-toggle">Fullscreen</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Scene Tree Panel -->
+            <aside id="right-panel" class="panel">
+                <div class="panel-header">
+                    <h3>Scene Tree</h3>
+                    <button class="panel-toggle" data-target="right-panel">×</button>
+                </div>
+                
+                <div class="panel-content">
+                    <div id="scene-tree-container">
+                        <!-- Scene tree will be rendered here -->
+                    </div>
+                </div>
+            </aside>
+        </main>
+
+        <!-- Status Bar -->
+        <footer id="status-bar">
+            <div class="status-left">
+                <span id="status-message">Ready</span>
+            </div>
+            <div class="status-right">
+                <span id="connection-status">Connected</span>
+            </div>
+        </footer>
+    </div>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html> 

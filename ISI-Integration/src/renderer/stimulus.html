@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' http://localhost:8000 ws://localhost:*; worker-src 'self' blob:;">
+    <title>ISI - Stimulus Generation</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Main App Container -->
+    <div id="app-container">
+        <!-- Header Bar -->
+        <header id="header-bar">
+            <div class="header-left">
+                <h1>ISI - Stimulus Generation</h1>
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    <span>System Ready</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <button class="header-btn" id="generate-stimulus">Generate</button>
+                <button class="header-btn" id="preview-stimulus">Preview</button>
+                <button class="header-btn" id="save-stimulus">Save</button>
+            </div>
+        </header>
+
+        <!-- Tab Navigation -->
+        <nav id="tab-navigation">
+            <div class="tab-container">
+                <button class="tab-btn" onclick="window.location.href='setup.html'">
+                    <span class="tab-icon">Setup</span>
+                    Setup
+                </button>
+                <button class="tab-btn js-active" onclick="window.location.href='stimulus.html'">
+                    <span class="tab-icon">Stimulus</span>
+                    Stimulus Generation
+                </button>
+                <button class="tab-btn" onclick="window.location.href='acquisition.html'">
+                    <span class="tab-icon">Acquisition</span>
+                    Acquisition
+                </button>
+                <button class="tab-btn" onclick="window.location.href='analysis.html'">
+                    <span class="tab-icon">Analysis</span>
+                    Analysis
+                </button>
+            </div>
+        </nav>
+
+        <!-- Corner Toggle Buttons (appear when panels are closed) -->
+        <button id="corner-toggle-left" class="corner-toggle corner-toggle-left js-hidden" title="Show Parameters Panel">
+            <span class="corner-toggle-icon">⚙</span>
+        </button>
+        <button id="corner-toggle-right" class="corner-toggle corner-toggle-right js-hidden" title="Show Properties Panel">
+            <span class="corner-toggle-icon">📊</span>
+        </button>
+
+        <!-- Main Content -->
+        <main id="main-content">
+            <!-- Left Parameters Panel -->
+            <aside id="left-panel" class="panel">
+                <div class="panel-header">
+                    <h3>Stimulus Parameters</h3>
+                    <button class="panel-toggle" data-target="left-panel">×</button>
+                </div>
+                
+                <div class="panel-content">
+                    <!-- Stimulus Type -->
+                    <div class="param-section">
+                        <h4>Stimulus Type</h4>
+                        <div class="param-grid">
+                            <div class="param-item">
+                                <label>Type</label>
+                                <select id="stimulus_type">
+                                    <option value="checkerboard_drift">Checkerboard with Drifting Bar</option>
+                                    <option value="grating">Drifting Grating</option>
+                                    <option value="checkerboard">Static Checkerboard</option>
+                                    <option value="noise">Random Noise</option>
+                                    <option value="flash">Flash</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Grating Parameters -->
+                    <div class="param-section" id="grating-params">
+                        <h4>Grating Parameters</h4>
+                        <div class="param-grid">
+                            <div class="param-item">
+                                <label>Spatial Frequency (cpd)</label>
+                                <input type="number" id="spatial_frequency" value="0.04" step="0.01" min="0.01">
+                            </div>
+                            <div class="param-item">
+                                <label>Temporal Frequency (Hz)</label>
+                                <input type="number" id="temporal_frequency" value="2" step="0.1" min="0.1">
+                            </div>
+                            <div class="param-item">
+                                <label>Orientation (°)</label>
+                                <input type="number" id="orientation" value="0" step="15" min="0" max="360">
+                            </div>
+                            <div class="param-item">
+                                <label>Contrast (%)</label>
+                                <input type="number" id="contrast" value="100" step="5" min="0" max="100">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Timing Parameters -->
+                    <div class="param-section">
+                        <h4>Timing</h4>
+                        <div class="param-grid">
+                            <div class="param-item">
+                                <label>Duration (s)</label>
+                                <input type="number" id="duration" value="5" step="0.5" min="0.1">
+                            </div>
+                            <div class="param-item">
+                                <label>Inter-stimulus Interval (s)</label>
+                                <input type="number" id="isi" value="2" step="0.1" min="0">
+                            </div>
+                            <div class="param-item">
+                                <label>Repetitions</label>
+                                <input type="number" id="repetitions" value="10" step="1" min="1">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Display Parameters -->
+                    <div class="param-section">
+                        <h4>Display</h4>
+                        <div class="param-grid">
+                            <div class="param-item">
+                                <label>Background Luminance</label>
+                                <input type="number" id="background_luminance" value="50" step="5" min="0" max="100">
+                            </div>
+                            <div class="param-item">
+                                <label>Gamma Correction</label>
+                                <input type="number" id="gamma" value="2.2" step="0.1" min="1" max="3">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="param-section">
+                        <button id="generate-button" class="primary-btn">Generate Stimulus</button>
+                        <button id="load-template" class="secondary-btn">Load Template</button>
+                        <button id="save-template" class="secondary-btn">Save Template</button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Central Preview Area -->
+            <section id="viewport">
+                <div id="stimulus-preview">
+                    <div class="preview-placeholder">
+                        <div class="preview-icon">Preview</div>
+                        <div class="preview-title">Stimulus Preview</div>
+                        <div class="preview-description">Generate a stimulus to see preview</div>
+                    </div>
+                </div>
+                
+                <!-- Preview Controls -->
+                <div id="preview-controls">
+                    <div class="control-group">
+                        <button class="control-btn" id="play-preview">Play</button>
+                        <button class="control-btn" id="pause-preview">Pause</button>
+                        <button class="control-btn" id="stop-preview">Stop</button>
+                    </div>
+                    <div class="control-group">
+                        <span>Frame: <span id="current-frame">0</span> / <span id="total-frames">0</span></span>
+                    </div>
+                </div>
+                
+                <!-- Bottom Corner Elements -->
+                <div id="bottom-corner-left" class="bottom-corner bottom-corner-left">
+                    <div class="viewport-info">
+                        <span id="fps-counter">60 FPS</span>
+                        <span id="frame-info">Frame 0/0</span>
+                    </div>
+                </div>
+                <div id="bottom-corner-right" class="bottom-corner bottom-corner-right">
+                    <div class="viewport-controls">
+                        <button class="viewport-btn" id="preview-mode">Preview</button>
+                        <button class="viewport-btn" id="export-mode">Export</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Properties Panel -->
+            <aside id="right-panel" class="panel">
+                <div class="panel-header">
+                    <h3>Stimulus Properties</h3>
+                    <button class="panel-toggle" data-target="right-panel">×</button>
+                </div>
+                
+                <div class="panel-content">
+                    <div id="stimulus-properties">
+                        <div class="property-section">
+                            <h4>Generated Stimulus</h4>
+                            <div class="property-list">
+                                <div class="property-item">
+                                    <span class="property-label">Type:</span>
+                                    <span class="property-value" id="prop-type">None</span>
+                                </div>
+                                <div class="property-item">
+                                    <span class="property-label">Duration:</span>
+                                    <span class="property-value" id="prop-duration">0s</span>
+                                </div>
+                                <div class="property-item">
+                                    <span class="property-label">Frame Rate:</span>
+                                    <span class="property-value" id="prop-framerate">60 fps</span>
+                                </div>
+                                <div class="property-item">
+                                    <span class="property-label">Total Frames:</span>
+                                    <span class="property-value" id="prop-frames">0</span>
+                                </div>
+                                <div class="property-item">
+                                    <span class="property-label">File Size:</span>
+                                    <span class="property-value" id="prop-size">0 MB</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="property-section">
+                            <h4>Export Options</h4>
+                            <div class="param-grid">
+                                <div class="param-item">
+                                    <label>Format</label>
+                                    <select id="export_format">
+                                        <option value="mp4">MP4 Video</option>
+                                        <option value="avi">AVI Video</option>
+                                        <option value="frames">Image Sequence</option>
+                                        <option value="mat">MATLAB Data</option>
+                                    </select>
+                                </div>
+                                <div class="param-item">
+                                    <label>Quality</label>
+                                    <select id="export_quality">
+                                        <option value="high">High</option>
+                                        <option value="medium">Medium</option>
+                                        <option value="low">Low</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button id="export-stimulus" class="primary-btn">Export Stimulus</button>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </main>
+
+        <!-- Status Bar -->
+        <footer id="status-bar">
+            <div class="status-left">
+                <span id="status-message">Ready to generate stimulus</span>
+            </div>
+            <div class="status-right">
+                <span id="connection-status">Connected</span>
+            </div>
+        </footer>
+    </div>
+
+    <script type="module" src="stimulus.js"></script>
+</body>
+</html> 
